@@ -7,12 +7,36 @@ function App() {
 
   const getTableData = async () => {
     const res = await mockData;
-    setAllData(res);
+    const newRes = [...res];
+    const newAllData = newRes.map((item) => ({ ...item, isChecked: false }));
+    setAllData(newAllData);
   };
 
   useEffect(() => {
     getTableData();
   }, []);
+
+  const handleChangChecked = (e, checkedItem) => {
+    const { name, checked } = e.target;
+
+    if (name === "check-all") {
+      const newDataWhenIsCheckedChange = allData.map((item) => {
+        return { ...item, isChecked: checked };
+      });
+      setAllData(newDataWhenIsCheckedChange);
+    }
+
+    if (name !== "check-all") {
+      const newDataWhenIsCheckedChange = allData.map((item) => {
+        if (checkedItem.id === item.id) {
+          return { ...item, isChecked: !item.isChecked };
+        } else {
+          return { ...item };
+        }
+      });
+      setAllData(newDataWhenIsCheckedChange);
+    }
+  };
 
   return (
     <>
@@ -25,7 +49,9 @@ function App() {
                   <label className="checkbox-container">
                     <input
                       type="checkbox"
+                      name="check-all"
                       className="default-input select-all"
+                      onChange={(e) => handleChangChecked(e)}
                     />
                     <span className="custom-checkbox"></span>
                     <span className="on-hover-checkbox"></span>
@@ -43,7 +69,12 @@ function App() {
                   <tr key={item.id}>
                     <td>
                       <label className="checkbox-container">
-                        <input type="checkbox" className="default-input" />
+                        <input
+                          type="checkbox"
+                          className="default-input"
+                          checked={item.isChecked}
+                          onChange={(e) => handleChangChecked(e, item)}
+                        />
                         <span className="custom-checkbox"></span>
                         <span className="on-hover-checkbox"></span>
                       </label>
