@@ -22,7 +22,14 @@ function App() {
             <tbody>
               <tr>
                 <th>
-                  <h3></h3>
+                  <label className="checkbox-container">
+                    <input
+                      type="checkbox"
+                      className="default-input select-all"
+                    />
+                    <span className="custom-checkbox"></span>
+                    <span className="on-hover-checkbox"></span>
+                  </label>
                 </th>
                 <th>
                   <h3>ID</h3>
@@ -35,9 +42,11 @@ function App() {
                 return (
                   <tr key={item.id}>
                     <td>
-                      <p>
-                        <input type="checkbox" />
-                      </p>
+                      <label className="checkbox-container">
+                        <input type="checkbox" className="default-input" />
+                        <span className="custom-checkbox"></span>
+                        <span className="on-hover-checkbox"></span>
+                      </label>
                     </td>
                     <td>
                       <p>{item.id}</p>
@@ -53,7 +62,7 @@ function App() {
         </div>
       </div>
 
-      <style jsx>
+      <style>
         {`
           .app-content {
             padding-bottom: 3rem;
@@ -69,6 +78,7 @@ function App() {
           }
           .app-table > tbody > tr > th:nth-child(1) {
             width: 10%;
+            text-align: center;
           }
           .app-table > tbody > tr > th:nth-child(2) {
             width: 10%;
@@ -78,12 +88,84 @@ function App() {
           }
           .app-table > tbody > tr > td:nth-child(1) {
             width: 10%;
+            text-align: center;
           }
           .app-table > tbody > tr > td:nth-child(2) {
             width: 10%;
           }
           .app-table > tbody > tr > td:nth-child(3) {
             width: 80%;
+          }
+        
+          /* ----- CheckBox ----- */
+          .checkbox-container {
+            position: relative;
+            cursor: pointer;
+          }
+          
+          .default-input {
+            position: absolute;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            cursor: pointer;
+          }
+          .custom-checkbox {
+            position: absolute;
+            margin: -0.75rem 0px 0px -0.5rem;
+            height: 1.5rem;
+            width: 1.5rem;
+            background-color: #ffffff;
+            border: 2px solid #c7c7c7;
+            border-radius: 5px;
+          }
+          /* ----- When Hover ----- */
+          .on-hover-checkbox {
+            position: absolute;
+            margin: -1.5rem 0px 0px -1.25rem;
+            background-color: #0000001f;
+            height: 3rem;
+            width: 3rem;
+            border-radius: 100%;
+            opacity: 0;
+            transition: opacity 0.5s;
+          }
+          .checkbox-container:hover .default-input ~ .on-hover-checkbox {
+            opacity: 1;
+          }
+          .checkbox-container:hover .default-input ~ .custom-checkbox {
+            border-color: #000000;
+          }
+          /* ----- When Checked(BG and CheckMark indicator Style) ----- */
+          .checkbox-container .default-input:checked ~ .custom-checkbox {
+            background-color: #000000;
+            border-color: #000000;
+          }
+          /* hidden when not checked */
+          .custom-checkbox:after {
+            content: "";
+            position: absolute;
+            display: none;
+          }
+          /* Show the custom-checkbox when checked */
+          .checkbox-container .default-input:checked ~ .custom-checkbox:after {
+            display: block;
+          }
+          /* Style the custom-checkbox/indicator */
+          .checkbox-container .custom-checkbox:after {
+            left: 0.3rem;
+            top: 0;
+            width: 35%;
+            height: 70%;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(
+              45deg
+            );
+            -ms-transform: rotate(45deg);
+            transform: rotate(
+              45deg
+            );
           }
         `}
       </style>
