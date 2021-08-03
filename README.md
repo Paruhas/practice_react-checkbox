@@ -1,3 +1,9 @@
+# Practice Input CheckBox with React
+
+- CSS custom input type="checkbox" style
+- Logic for select checked
+- (optional) Export to csv or excel(xlsx) file
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
