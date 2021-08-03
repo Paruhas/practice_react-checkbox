@@ -41,23 +41,22 @@ function App() {
       });
       setAllData(newDataWhenIsCheckedChange);
 
-      newDataWhenIsCheckedChange.map((item) => {
-        if (item.isChecked !== false) {
-          console.log("not all");
-          setIsCheckAll((prev) => ({
-            ...prev,
-            check: checked,
-            type: "single",
-          }));
-          return item;
+      // Logic CheckBox to work like Google Mail
+      let dataCount = 0;
+      for (let i = 0; i < newDataWhenIsCheckedChange.length; i += 1) {
+        if (newDataWhenIsCheckedChange[i].isChecked === true) {
+          dataCount = dataCount + 1;
         }
-        if (item.isChecked === true) {
-          console.log("yes it's all");
-          setIsCheckAll((prev) => ({ ...prev, type: "all" }));
-          return item;
-        }
-        return item;
-      });
+      }
+      if (dataCount === newDataWhenIsCheckedChange.length) {
+        setIsCheckAll((prev) => ({ ...prev, check: true, type: "all" }));
+      }
+      if (dataCount !== newDataWhenIsCheckedChange.length) {
+        setIsCheckAll((prev) => ({ ...prev, check: true, type: "single" }));
+      }
+      if (dataCount === 0) {
+        setIsCheckAll((prev) => ({ ...prev, check: false, type: "" }));
+      }
     }
   };
 
