@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import mockData from "./data.json";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 function App() {
   const [allData, setAllData] = useState([]);
@@ -13,7 +15,7 @@ function App() {
     const res = await mockData;
     const newRes = [...res];
     const newAllData = newRes.map((item) => ({ ...item, isChecked: false }));
-    setAllData(newAllData);
+    setAllData(newAllData.slice(0, 10));
   };
 
   useEffect(() => {
@@ -58,6 +60,34 @@ function App() {
         setIsCheckAll((prev) => ({ ...prev, check: false, type: "" }));
       }
     }
+  };
+
+  // // ===== export to Excel File =====
+  const fileType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
+
+  const exportToCSV = () => {
+    const copyAllData = [...allData];
+    const exportData = [];
+    for (let i = 0; i < copyAllData.length; i += 1) {
+      if (copyAllData[i].isChecked === true) {
+        const exportItem = {
+          id: copyAllData[i].id,
+          productName: copyAllData[i].productName,
+          productPrice: copyAllData[i].productPrice,
+          productImg: copyAllData[i].productImg,
+        };
+        exportData.push(exportItem);
+      }
+    }
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    const fileName = `excel-${Date.now()}`;
+    FileSaver.saveAs(data, fileName + fileExtension);
   };
 
   return (
@@ -113,9 +143,17 @@ function App() {
               })}
             </tbody>
           </table>
+          <div className="app-table-export">
+            <button
+              type="button"
+              className="app-table-export-btn"
+              onClick={() => exportToCSV()}
+            >
+              EXPORT
+            </button>
+          </div>
         </div>
       </div>
-
       <style>
         {`
           .app-content {
@@ -292,6 +330,16 @@ function App() {
                 90deg
               );
             }`
+          }
+
+          .app-table-export {
+            width: max-content;
+            margin: auto;
+            padding: 1rem;
+          }
+
+          .app-table-export-btn {
+            padding: 1rem;
           }
 
         `}
